@@ -1,0 +1,33 @@
+{% import json %}
+<html>
+    <head>
+        <link rel="stylesheet" href="{{static_url('css/common.css')}}" type="text/css" />
+        <script language="javascript">
+            scene = {{json.dumps(scene)}};
+        </script>
+        <script language="javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+        <script language="javascript" src="{{static_url('js/easel.js')}}"></script>
+        <script language="javascript" src="{{static_url('js/liveSearch.js')}}"></script>
+        <script language="javascript" src="{{static_url('js/etscene.js')}}"></script>
+        <script language="javascript" src="{{static_url('js/scene-edit.js')}}"></script>
+    </head>
+    <body id="describe">
+        <div id="canvas-container"></div>
+        <table id="info">
+            <tr>
+                <td class="label"><label for="title">Title</label></td>
+                <td><input type="text" name="title" id="title" /></td>
+            </tr>
+            <tr>
+                <td class="label"><label for="description">Description</label></td>
+                <td><textarea name="description" id="description"></textarea></td>
+            </tr>
+            <tr>
+                <td colspan="2"><button id="save-button">Save</button></td>
+            </tr>
+        </table>
+        Embed code: <input type="text" id="embed-code" />
+        <!--<button>Copy to clipboard</button>-->
+        <p class="notice">The term 'Etsy' is a trademark of Etsy, Inc. This application uses the Etsy API but is not endorsed or certified by Etsy, Inc.</p>
+    </body>
+</html>

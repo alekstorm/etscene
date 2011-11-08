@@ -1,0 +1,4 @@
+#!/bin/bash
+source bin/activate
+cd etscene
+python -B core.py $@

@@ -1,0 +1,17 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="{{static_url('css/common.css')}}" type="text/css" />
+    </head>
+    <body id="upload">
+        <h1>Welcome to Etscene!</h1>
+        <p>Upload a picture with one or two (or more) Etsy products to get started.</p>
+        <form action="/" enctype="multipart/form-data" method="post">
+            <input type="file" name="picture" />
+            <input type="submit" value="Step 2 >>" />
+        </form>
+        <p class="notice">The term 'Etsy' is a trademark of Etsy, Inc. This application uses the Etsy API but is not endorsed or certified by Etsy, Inc.</p>
+        <p>Examples:</p>
+        <a href="/examples/decor">Decor</a><br/>
+        <a href="/examples/outfit">Outfit</a>
+    </body>
+</html>
