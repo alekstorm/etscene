@@ -42,11 +42,11 @@ def sanitize(str):
 def toListingInfo(data):
     return {
         'id': data['listing_id'],
-        'image': data['MainImage']['url_75x75'],
+        'image': data['MainImage'].get('url_75x75'),
         'title': sanitize(data['title'])[:35],
         'description': sanitize(data['description'])[:90],
         'shop': data['Shop']['shop_name'],
-        'price': data['price'],
+        'price': data.get('price'),
         'currency': data['currency_code'],
         'url': data['url'],
     }
