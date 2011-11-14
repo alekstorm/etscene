@@ -1,6 +1,5 @@
 $(function() {
-    var container = $('#canvas-container');
-    container.etscene('create', scene, true);
+    var container = $('.etscene-container');
 
     var save_button = $('#save-button');
     save_button.click(function() {
@@ -10,13 +9,13 @@ $(function() {
             url: '/scene/'+scene._id+'/edit',
             data: {
                 //_xsrf: getCookie('session'),
-                boxes: JSON.stringify(container.etscene('getBoxes')),
+                boxes: JSON.stringify(container.etscene('getBoxes'))
             },
             type: 'post',
             dataType: 'json',
             success: function(response) {
-                save_button.text('Saved!');
-            },
+                save_button.text('Saved');
+            }
         });
     });
 

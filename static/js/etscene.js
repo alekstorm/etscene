@@ -100,7 +100,7 @@ var images = {
     CART_INACTIVE: 'http://'+HOST+'/static/img/cart-inactive.png',
     CART_ACTIVE: 'http://'+HOST+'/static/img/cart-active.png',
     FAVORITE_INACTIVE: 'http://'+HOST+'/static/img/favorite-inactive.png',
-    FAVORITE_ACTIVE: 'http://'+HOST+'/static/img/favorite-active.png',
+    FAVORITE_ACTIVE: 'http://'+HOST+'/static/img/favorite-active.png'
 };
 
 var Box = function(x, y, width, height, listing) {
@@ -157,7 +157,7 @@ p.setListings = function(listings) {
     this._placeListings();
 }
 
-p.delete = function() {
+p.del = function() {
     if ( this.item_search ) {
         $(this.item_search.htmlElement).remove();
         this.item_search = undefined;
@@ -216,7 +216,7 @@ var createListing = function(data) {
         ).data('listing', data);
 }
 
-var productSearch = function(input) {
+productSearch = function(input) {
     var search = input.liveSearch();
     var queries = 0;
     // TODO "see more" - last dropdown item
@@ -237,7 +237,7 @@ var productSearch = function(input) {
                         listings.push(createListing(response.data[i]));
                     search.liveSearch(listings);
                 }
-            },
+            }
         });
     });
     return search;
@@ -254,7 +254,7 @@ $.fn.etscene = function(method, scene, editable) {
                 x: box.x,
                 y: box.y,
                 width: box.width,
-                height: box.height,
+                height: box.height
             });
         }
         return boxes;
@@ -263,10 +263,12 @@ $.fn.etscene = function(method, scene, editable) {
     var container = this.css({position: 'relative'});
     var img = new Image();
     img.onload = function() {
-        var base_canvas = $('<canvas>').css({position: 'absolute', display: 'block'}).appendTo(container);
+        var base_canvas = $(EaselJS.createCanvas()).css({position: 'absolute'}).appendTo(container);
         var base_ctx = base_canvas[0].getContext('2d');
-        var active_canvas = $('<canvas>').css({position: 'relative', display: 'block'}).appendTo(container);
+        var active_canvas = $(EaselJS.createCanvas()).css({position: 'absolute'}).appendTo(container);
         var active_ctx = active_canvas[0].getContext('2d');
+        container.width(img.width);
+        container.height(img.height);
         base_canvas.attr('width', img.width);
         base_canvas.attr('height', img.height);
         active_canvas.attr('width', img.width);
@@ -416,7 +418,7 @@ $.fn.etscene = function(method, scene, editable) {
                     var removeListingSearch = function() {
                         if ( !closed ) {
                             closed = true;
-                            new_box.delete();
+                            new_box.del();
                             new_box.item_search = undefined;
                             new_box = undefined;
                             base_stage.update();

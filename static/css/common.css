@@ -1,20 +1,36 @@
+body {
+    font-family: Verdana, Geneva, sans-serif;
+    font-size: 14px;
+}
+
 canvas {
     float: left;
 }
 
+.etscene-container {
+    float: left;
+}
+
+.liveSearch {
+    z-index: 3;
+    padding-left: 0;
+}
+
 .liveSearch-results {
+    position: absolute;
     overflow: auto;
     border: 1px solid grey;
     cursor: default;
     padding: 0;
     margin: 0;
+    z-index: 6;
 }
 
 .liveSearch-results.boxed {
     cursor: pointer;
 }
 
-.liveSearch-results > li {
+.liveSearch-results li {
     float: left;
     clear: left;
     padding: 5px;
@@ -23,31 +39,31 @@ canvas {
     background-color: white;
 }
 
-.liveSearch-results > li.liveSearch-selected {
+.liveSearch-results li.liveSearch-selected {
     background-color: blue;
     color: white;
     cursor: default;
 }
 
-.liveSearch-results > li.liveSearch-selected > div > span {
+.liveSearch-results li.liveSearch-selected div span {
     color: white;
 }
 
-.liveSearch-results > li > div > span {
+.liveSearch-results li div span {
     font-family: Arial;
 }
 
-.liveSearch-results > li > div > .title {
+.liveSearch-results li div .title {
     font-size: 12px;
     white-space: nowrap;
 }
 
-.liveSearch-results.boxed > li:hover > div > .title,
-.liveSearch-results.boxed > li:hover > div > .description {
+.liveSearch-results.boxed li:hover div .title,
+.liveSearch-results.boxed li:hover div .description {
     text-decoration: underline;
 }
 
-.liveSearch-results > li > div > .description {
+.liveSearch-results li div .description {
     display: block;
     font-size: 10px;
     height: 26px;
@@ -55,39 +71,40 @@ canvas {
     color: #666;
 }
 
-.liveSearch-results > li > div > .shop {
+.liveSearch-results li div .shop {
     float: left;
     font-size: 11px;
     color: #b2b2b2;
 }
 
-.liveSearch-results > li > div > .price,
-.liveSearch-results > li > div > .currency {
+.liveSearch-results li div .price,
+.liveSearch-results li div .currency {
     float: right;
     font-size: 11px;
     color: #78c042;
 }
 
-.liveSearch-results > li > div > .currency {
+.liveSearch-results li div .currency {
     padding-left: 2px;
     font-size: 9px;
 }
 
-.liveSearch-results > li > div > .main-image {
+.liveSearch-results li div .main-image {
     float: left;
     padding-right: 5px;
 }
 
-.liveSearch-results > li > div > .icon {
+.liveSearch-results li div .icon {
     float: left;
     padding: 2px 1px 0 2px;
 }
 
-.liveSearch-results > li > div > .icon#cart {
+.liveSearch-results li div .icon#cart {
     padding-right: 3px;
 }
 
 .liveSearch-entry {
+    display: block;
     margin-left: 0;
     margin-bottom: 0;
     padding-right: 20px;
@@ -101,11 +118,6 @@ canvas {
 
 #info td.label {
     vertical-align: top;
-}
-
-body {
-    font-family: Verdana, Geneva, sans-serif;
-    font-size: 14px;
 }
 
 #embed-code {

@@ -26,13 +26,13 @@ $.fn.liveSearch = function(new_results) {
     }
 
     if ( !search.data('liveSearch') ) {
-        search = $('<div class="liveSearch">')
-            .attr({autocomplete: 'off'})
-            .css('position', 'static');
+        search = $('<div class="liveSearch">');
         data = {
             selected: 0,
-            input: this.addClass('liveSearch-entry').appendTo(search),
-            results: $('<ul class="liveSearch-results">').appendTo(search),
+            input: this.addClass('liveSearch-entry')
+                .attr({autocomplete: 'off'})
+                .appendTo(search),
+            results: $('<ul class="liveSearch-results">').appendTo(search)
         };
         search.data('liveSearch', data);
 
