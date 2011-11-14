@@ -1,5 +1,7 @@
 /etscene/local_settings.py
 
+/static/js/easel.js
+
 /bin/
 /build/
 /data/
