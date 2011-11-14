@@ -19,11 +19,10 @@ $(function() {
         });
     });
 
-    var dirtySave = function() {
+    container.click(function() {
         save_button.text('Save');
         save_button.removeAttr('disabled');
-    }
-    dirtySave();
+    });
 
     // TODO multiple titles
     $('#embed-code')

@@ -260,7 +260,7 @@ $.fn.etscene = function(method, scene, editable) {
         return boxes;
     }
 
-    var container = this.css({position: 'relative'});
+    var container = this.addClass('etscene-container');
     var img = new Image();
     img.onload = function() {
         var base_canvas = $(EaselJS.createCanvas()).css({position: 'absolute'}).appendTo(container);
