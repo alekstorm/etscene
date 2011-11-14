@@ -5,7 +5,9 @@
 // TODO namespacing for embedding
 // TODO global tools, info menu - buy/favorite all, go to cart, go to scene homepage, Etscene logo
 // TODO render normal image for old browsers
+
 (function($) {
+// Add convenience mouse events that only trigger on a certain button
 // TODO fix this
 var buttons = {1: 'left', 2: 'middle', 3: 'right'};
 var events = ['click', 'dblclick', 'mousedown', 'mouseup', 'toggle'];
@@ -25,6 +27,7 @@ for ( var code in buttons ) {
 
 var HOST = 'etscene.net';
 
+// Gets the value for a given cookie key
 function getCookie(name) {
     var r = document.cookie.match('\\b'+name+'=([^;]*)\\b');
     return r ? r[1] : undefined;
@@ -34,6 +37,7 @@ CanvasRenderingContext2D.prototype.clear = function() {
     this.canvas.width = this.canvas.width;
 };
 
+// Shape that allows itself to be drawn while its image is loading in the background
 var AsyncImage = function(src) {
     this.initialize(src, Array.prototype.slice.call(arguments, 1));
 };
@@ -52,6 +56,7 @@ p.initialize = function(src, args) {
    img.src = src;
 };
 
+// Draws the DisplayObject `shown` parameter, but detects collisions with the `hit_mask` parameter.
 var ShadowObject = function(shown, hit_mask) {
     this.initialize(shown, hit_mask);
 };
@@ -74,6 +79,7 @@ p.drawHitMask = function(ctx) {
         this.hit_mask.draw(ctx);
 };
 
+// Invisible on the drawing surface, but registers hits within a rectangle
 var HiddenBox = function(width, height) {
     this.initialize(width, height);
 };
@@ -103,6 +109,7 @@ var images = {
     FAVORITE_ACTIVE: 'http://'+HOST+'/static/img/favorite-active.png'
 };
 
+// Box on drawing surface representing a listing
 var Box = function(x, y, width, height, listing) {
     this.initialize(x, y, width, height, listing);
 };
@@ -131,12 +138,14 @@ p.setBounds = function(x, y, width, height) {
     this._place();
 };
 
+// Show input element with drop-down to select the listing of the tagged region
 p.setItemSearch = function(item_search) {
     this.item_search = item_search;
     this.addChild(this.item_search);
     this.item_search.setTransform(0, this.height);
 }
 
+// Show listings associated with all boxes under the mouse pointer
 p.setListings = function(listings) {
     this.listings = listings;
     if ( this.listings_ul )
@@ -175,6 +184,8 @@ p._place = function() {
     var hiddenbox = new HiddenBox(this.width, this.height);
     hiddenbox.setTransform(0, 0);
     this.addChild(hiddenbox);
+
+    // Draw semi-transparent edges
     for ( var i = 0; i < coords.length; i++ ) {
         this.addChild(new ShadowObject(
             new Shape(new Graphics().setStrokeStyle(BOX_BORDER_WIDTH).beginStroke(BOX_BORDER_COLOR).moveTo(start[0]+0.5, start[1]+0.5).lineTo(coords[i][0]+0.5, coords[i][1]+0.5)),
@@ -186,6 +197,8 @@ p._place = function() {
         this.addChild(corner);
         start = coords[i];
     }
+
+    // Draw favorite and cart icons
     var icons = [images.CART_ACTIVE, images.FAVORITE_ACTIVE];
     for ( var i = 0; i < icons.length; i++ ) {
         var img = new AsyncImage(icons[i], 0, 0, 12, 12);
@@ -216,6 +229,7 @@ var createListing = function(data) {
         ).data('listing', data);
 }
 
+// Create listing search element with dropdown
 productSearch = function(input) {
     var search = input.liveSearch();
     var queries = 0;
@@ -263,6 +277,8 @@ $.fn.etscene = function(method, scene, editable) {
     var container = this.addClass('etscene-container');
     var img = new Image();
     img.onload = function() {
+        // To speed up drawing, render only currently-changing sprites on the "active" canvas, positioned
+        // directly over the "base" canvas, containing the background image and immobile boxes.
         var base_canvas = $(EaselJS.createCanvas()).css({position: 'absolute'}).appendTo(container);
         var base_ctx = base_canvas[0].getContext('2d');
         var active_canvas = $(EaselJS.createCanvas()).css({position: 'absolute'}).appendTo(container);
@@ -280,6 +296,8 @@ $.fn.etscene = function(method, scene, editable) {
         base_stage.addChild(bg_img);
         var base_boxes = new Container();
         container.data('etscene', {boxes: base_boxes});
+
+        // Load saved boxes
         for ( var i = 0; i < scene.boxes.length; i++ ) {
             var info = scene.boxes[i];
             if ( info.listing ) {

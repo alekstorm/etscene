@@ -54,11 +54,18 @@ def toListingInfo(data):
 
 
 class AppResource(Resource):
+    """Universal base class for all dynamic resources"""
     def __init__(self, app):
         self.app = app
 
 
 class LoggedInResource(AppResource):
+    """
+    Base class of all resources that require the user to be logged in.
+    Signs all outgoing and unsigns all incoming cookies, checks for
+    xsrf-protection parameter, retrieves user account object from MongoDB.
+    """
+
     @signed_cookie(settings.COOKIE_SECRET)
     #@xsrf('session') # FIXME
     @authenticate(lambda self, user: self.app.db.scenes.find_one({'_id': user.value}), 'session', redirect='/')
@@ -72,6 +79,7 @@ class HomeResource(AppResource):
 
     @signed_cookie(settings.COOKIE_SECRET)
     def post(self, request):
+        """Upload the user's image and redirect to scene editing page."""
         session_id = uuid.uuid4().hex
         self.app.db.scenes.insert({'_id': session_id, 'boxes': []})
         file = request.files['picture'][0]
@@ -81,6 +89,7 @@ class HomeResource(AppResource):
 
 
 class SceneContainerResource(AppResource):
+    """Creates resources exposing scene objects retrieve from MongoDB by ID."""
     def __getitem__(self, scene_id):
         return SceneResource(self.app, self.app.db.scenes.find_one({'_id': scene_id}))
 
@@ -117,6 +126,7 @@ class SceneEmbedResource(AppResource):
 
     @gen.engine
     def get(self, request):
+        """Generate Javascript to embed an Etscene widget in an external web page."""
         yield gen.Task(getListingInfos, self.app.etsy, self.scene['boxes'])
         HTTPStream(request, HTTPResponse()).finish(self.app.loader.load('scene-embed.js').generate(scene=self.scene, editable=False))
 
@@ -128,14 +138,17 @@ class SceneEditResource(LoggedInResource):
 
     @gen.engine
     def get(self, request, user):
+        """Generate page to edit a scene."""
         yield gen.Task(getListingInfos, self.app.etsy, self.scene['boxes'])
         HTTPStream(request, HTTPResponse()).finish(self.app.loader.load('scene-edit.html').generate(scene=self.scene))
 
     def post(self, request, user, boxes):
+        """Save changes to scene."""
         if user['_id'] != self.scene['_id']:
             return HTTPUnauthorizedResponse()
         self.scene['boxes'] = json.loads(boxes) # FIXME deserialize, sanitize
         self.app.db.scenes.save(self.scene)
+        return ''
 
 
 # TODO items bought, favorited, listed in treasury, available in shop
