@@ -1,18 +1,9 @@
-{% import json %}
 <html>
-    <head>
-        <link rel="stylesheet" href="{{static_url('css/common.css')}}" type="text/css" />
+    <body>
         <script language="javascript">
-            scene = {{json.dumps(scene)}};
+            {% module Template('scene-embed.js', scene=scene, editable=True) %}
         </script>
-        <script language="javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
-        <script language="javascript" src="{{static_url('js/easel.js')}}"></script>
-        <script language="javascript" src="{{static_url('js/liveSearch.js')}}"></script>
-        <script language="javascript" src="{{static_url('js/etscene.js')}}"></script>
         <script language="javascript" src="{{static_url('js/scene-edit.js')}}"></script>
-    </head>
-    <body id="describe">
-        <div id="canvas-container"></div>
         <table id="info">
             <tr>
                 <td class="label"><label for="title">Title</label></td>

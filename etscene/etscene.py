@@ -9,6 +9,7 @@ from   StringIO import StringIO
 from   tornado import gen
 from   tornado.template import Loader
 import tornado.web
+from   tornado.util import ObjectDict
 import uuid
 from   vortex import Application, HTTPStream, HTTPResponse, Resource, authenticate, signed_cookie, xsrf
 from   vortex.resources import DictResource, StaticDirectoryResource, StaticFileResource
@@ -117,7 +118,7 @@ class SceneEmbedResource(AppResource):
     @gen.engine
     def get(self, request):
         yield gen.Task(getListingInfos, self.app.etsy, self.scene['boxes'])
-        HTTPStream(request, HTTPResponse()).finish(self.app.loader.load('scene-embed.js').generate(scene=self.scene))
+        HTTPStream(request, HTTPResponse()).finish(self.app.loader.load('scene-embed.js').generate(scene=self.scene, editable=False))
 
 
 class SceneEditResource(LoggedInResource):
@@ -162,10 +163,11 @@ class EtsceneApplication(Application):
     def __init__(self):
         self.db = pymongo.Connection(port=settings.DB_PORT)[settings.DB_NAME]
         self.loader = Loader(
-            os.path.join(os.path.dirname(__file__), '../template'),
+            os.path.join(ROOT_DIR, 'template'),
             autoescape=None,
             namespace={
-                'static_url': lambda url: tornado.web.StaticFileHandler.make_static_url({'static_path': STATIC_DIR}, url)
+                'static_url': lambda url: tornado.web.StaticFileHandler.make_static_url({'static_path': STATIC_DIR}, url),
+                '_modules': ObjectDict({'Template': lambda template, **kwargs: self.loader.load(template).generate(**kwargs)}),
             },
         )
 
@@ -181,4 +183,5 @@ class EtsceneApplication(Application):
             }),
         })
 
+        self.etsy = None
         self.etsy = yield gen.Task(EtsyV2, api_key=settings.ETSY_KEYSTRING, env=etsy.env.ProductionEnv)

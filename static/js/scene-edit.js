@@ -28,6 +28,6 @@ $(function() {
 
     // TODO multiple titles
     $('#embed-code')
-        .val('<script language="javascript" src="http://etscene.net/static/js/easel.js"></script><script language="javascript" src="http://etscene.net/scene/'+scene._id+'/embed"></script>')
+        .val('<script language="javascript" src="http://etscene.net/scene/'+scene._id+'/embed"></script>')
         .click(function() { this.select(); });
 });
