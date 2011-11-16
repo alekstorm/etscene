@@ -8,7 +8,7 @@ import settings
 
 logger = logging.getLogger()
 logger.addHandler(logging.StreamHandler())
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.WARNING)
 
 HTTPServer(EtsceneApplication()).listen(port=settings.LISTEN_PORT)
 IOLoop.instance().start()
