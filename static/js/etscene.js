@@ -456,7 +456,7 @@ $.fn.etscene = function(method, scene, editable) {
                     var cancelNewBox = function() {
                         if ( !closed ) {
                             removeListingSearch();
-                            base_boxes.removeChild(new_box);
+                            base_boxes.removeChildAt(base_boxes.getNumChildren()-1);
                             new_box = undefined;
                             base_stage.update();
                         }
