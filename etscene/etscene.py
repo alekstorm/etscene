@@ -11,8 +11,8 @@ from   tornado.template import Loader
 import tornado.web
 from   tornado.util import ObjectDict
 import uuid
-from   vortex import Application, HTTPStream, HTTPResponse, Resource, authenticate, signed_cookie, xsrf
-from   vortex.resources import DictResource, StaticDirectoryResource, StaticFileResource
+from   vortex import Application, HTTPStream, HTTPPreamble, Resource, authenticate, signed_cookie, xsrf
+from   vortex.resources import DictResource, StaticFileResource
 from   vortex.responses import HTTPFoundResponse, HTTPUnauthorizedResponse
 
 import settings
@@ -102,7 +102,7 @@ class SceneResource(AppResource, DictResource):
             'embed': SceneEmbedResource(self.app, self.scene),
             'edit': SceneEditResource(self.app, self.scene),
             'picture': StaticFileResource(os.path.join(PICTURE_DIR, scene['_id']+'.png')),
-        });
+        })
 
     def get(self, request):
         return self.app.loader.load('scene.html').generate(scene=self.scene)
@@ -128,7 +128,7 @@ class SceneEmbedResource(AppResource):
     def get(self, request):
         """Generate Javascript to embed an Etscene widget in an external web page."""
         yield gen.Task(getListingInfos, self.app.etsy, self.scene['boxes'])
-        HTTPStream(request, HTTPResponse()).finish(self.app.loader.load('scene-embed.js').generate(scene=self.scene, editable=False))
+        HTTPStream(request, HTTPPreamble()).finish(self.app.loader.load('scene-embed.js').generate(scene=self.scene, editable=False))
 
 
 class SceneEditResource(LoggedInResource):
@@ -140,7 +140,7 @@ class SceneEditResource(LoggedInResource):
     def get(self, request, user):
         """Generate page to edit a scene."""
         yield gen.Task(getListingInfos, self.app.etsy, self.scene['boxes'])
-        HTTPStream(request, HTTPResponse()).finish(self.app.loader.load('scene-edit.html').generate(scene=self.scene))
+        HTTPStream(request, HTTPPreamble()).finish(self.app.loader.load('scene-edit.html').generate(scene=self.scene))
 
     def post(self, request, user, boxes):
         """Save changes to scene."""
@@ -168,7 +168,7 @@ class EtsyProductSearchResource(AppResource):
     @gen.engine
     def get(self, request, query):
         listings = yield gen.Task(self.app.etsy.findAllListingActive, keywords=query, sort_on='score', limit=10, **LISTING_INFO)
-        HTTPStream(request, HTTPResponse(headers={'Content-Type': 'application/json'})).finish(json.dumps({'data': [toListingInfo(listing) for listing in listings or []]}))
+        HTTPStream(request, HTTPPreamble(headers={'Content-Type': 'application/json'})).finish(json.dumps({'data': [toListingInfo(listing) for listing in listings or []]}))
 
 
 class EtsceneApplication(Application):
