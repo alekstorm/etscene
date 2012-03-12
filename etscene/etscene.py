@@ -66,7 +66,7 @@ class LoggedInResource(AppResource):
     xsrf-protection parameter, retrieves user account object from MongoDB.
     """
 
-    @signed_cookie(settings.COOKIE_SECRET)
+    #@signed_cookie(settings.COOKIE_SECRET)
     #@xsrf('session') # FIXME
     @authenticate(lambda self, user: self.app.db.scenes.find_one({'_id': user.value}), 'session', redirect='/')
     def __call__(self, request, user):
@@ -77,7 +77,7 @@ class HomeResource(AppResource):
     def get(self, request):
         return self.app.loader.load('home.html').generate()
 
-    @signed_cookie(settings.COOKIE_SECRET)
+    #@signed_cookie(settings.COOKIE_SECRET)
     def post(self, request):
         """Upload the user's image and redirect to scene editing page."""
         session_id = uuid.uuid4().hex
@@ -186,8 +186,8 @@ class EtsceneApplication(Application):
 
         Application.__init__(self, {
             '': HomeResource(self),
-            'static': StaticDirectoryResource(STATIC_DIR),
-            #'favicon.ico': StaticFileResource(os.path.join(STATIC_DIR, 'favicon.ico')),
+            'static': StaticFileResource(STATIC_DIR),
+            'favicon.ico': StaticFileResource(os.path.join(STATIC_DIR, 'favicon.ico')),
             'search': EtsyProductSearchResource(self),
             'scene': SceneContainerResource(self),
             'examples': DictResource({

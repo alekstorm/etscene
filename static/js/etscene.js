@@ -280,9 +280,7 @@ $.fn.etscene = function(method, scene, editable) {
         // To speed up drawing, render only currently-changing sprites on the "active" canvas, positioned
         // directly over the "base" canvas, containing the background image and immobile boxes.
         var base_canvas = $(EaselJS.createCanvas()).css({position: 'absolute'}).appendTo(container);
-        var base_ctx = base_canvas[0].getContext('2d');
         var active_canvas = $(EaselJS.createCanvas()).css({position: 'absolute'}).appendTo(container);
-        var active_ctx = active_canvas[0].getContext('2d');
         container.width(img.width);
         container.height(img.height);
         base_canvas.attr('width', img.width);
